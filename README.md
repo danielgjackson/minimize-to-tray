@@ -6,6 +6,8 @@ This might be useful for long-running programs that you are happy to leave in th
 
 This is designed to be scriptable -- if you want something more interactive/point-and-click, you might prefer: [RBTray](http://rbtray.sourceforge.net/).
 
+Download the utility from [Releases](https://github.com/danielgjackson/minimize-to-tray/releases/latest).
+
 Usage:
 
 ```bat
