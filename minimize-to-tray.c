@@ -285,13 +285,15 @@ void CALLBACK WinEventProc(HWINEVENTHOOK hWinEventHook, DWORD event, HWND hWnd, 
 // State for finding a window
 typedef struct
 {
-	const TCHAR *suffix;
+	const TCHAR *title;
 	HWND hWndFound;
+	BOOL bSuffix;
+	BOOL bPrefix;
 	const TCHAR *matchingTitle;
 } find_state_t;
 
-// Callback helper to match on a window title's suffix
-static BOOL CALLBACK enumFuncFindSuffix(HWND hWnd, LPARAM lparam)
+// Callback helper to match on a window title
+static BOOL CALLBACK enumFuncFindTitle(HWND hWnd, LPARAM lparam)
 {
 	find_state_t *findState = (find_state_t *)lparam;
 	if (IsWindowVisible(hWnd))
@@ -301,18 +303,32 @@ static BOOL CALLBACK enumFuncFindSuffix(HWND hWnd, LPARAM lparam)
 		TCHAR *windowTitle = (TCHAR *)malloc((length + 1) * sizeof(TCHAR));
 		GetWindowText(hWnd, windowTitle, length + 1);
 		
+		// Loop through all matching substrings
 		BOOL matched = FALSE;
-
-		// Find last matching substring
-		TCHAR *last = NULL;
-		for (TCHAR *match, *search = windowTitle; (match = _tcsstr(search, findState->suffix)) != NULL; search++)
+		for (TCHAR *match, *search = windowTitle; (match = _tcsstr(search, findState->title)) != NULL; search++)
 		{
-			last = match;
+			// Matching complete string only
+			if (!findState->bSuffix && !findState->bPrefix)
+			{
+				matched |= match == windowTitle && _tcslen(findState->title) == _tcslen(windowTitle);
+			}
+			// Matching as a prefix
+			if (!findState->bSuffix && findState->bPrefix)
+			{
+				matched |= match == windowTitle;
+			}
+			// Matching as a suffix
+			if (findState->bSuffix && !findState->bPrefix)
+			{
+				matched |= _tcslen(findState->title) + (match - windowTitle) >= _tcslen(windowTitle);
+			}
+			// Matching as any substring 
+			if (findState->bSuffix && findState->bPrefix)
+			{
+				matched |= true;
+			}
 		}
 		
-		// Only matched if it is the title's suffix
-		matched = (last != NULL && (last - windowTitle) + _tcslen(findState->suffix) >= _tcslen(windowTitle));
-
 		// Adjust matching windows
 		if (matched)
 		{
@@ -558,8 +574,8 @@ int run(int argc, TCHAR *argv[], HINSTANCE hInstance, BOOL hasConsole)
 
 	ghInstance = hInstance;
 
-	TCHAR *windowSuffix = NULL;
 	BOOL bShowHelp = FALSE;
+	find_state_t findState = {0};
 	int positional = 0;
 	int errors = 0;
 
@@ -584,7 +600,20 @@ int run(int argc, TCHAR *argv[], HINSTANCE hInstance, BOOL hasConsole)
 		{
 			if (positional == 0)
 			{
-				windowSuffix = argv[i];
+				size_t len = _tcslen(argv[i]);
+				if (len > 0 && argv[i][len - 1] == L'*')
+				{
+					findState.bPrefix = TRUE;
+					argv[i][len - 1] = '\0';
+				}
+
+				findState.title = argv[i];
+
+				if (findState.title[0] == L'*')
+				{
+					findState.bSuffix = TRUE;
+					findState.title++;
+				}
 			} 
 			else 
 			{
@@ -602,9 +631,9 @@ int run(int argc, TCHAR *argv[], HINSTANCE hInstance, BOOL hasConsole)
 		bShowHelp = true;
 	}
 
-	if (windowSuffix == NULL || _tcslen(windowSuffix) == 0)
+	if (findState.title == NULL || _tcslen(findState.title) == 0)
 	{
-		_ftprintf(stderr, TEXT("ERROR: Window suffix not specified.\n"));
+		_ftprintf(stderr, TEXT("ERROR: Window title not specified.\n"));
 		bShowHelp = true;
 	}
 
@@ -613,8 +642,11 @@ int run(int argc, TCHAR *argv[], HINSTANCE hInstance, BOOL hasConsole)
 		TCHAR *msg = TEXT(
 		  "minimize-to-tray  Dan Jackson, 2020.\n"
 		  "\n"
-		  "Usage: [/NOMIN|/MIN] [/POLL] \"<window-title-suffix>\"\n"
-		  "\n");
+		  "Usage: [/NOMIN|/MIN] [/POLL] \"<window-title>\"\n"
+		  "\n"
+		  "<window-title> can begin and end with '*' to match as a substring; begin with '*' to match as a suffix; end with '*' to match as a prefix; or otherwise must match exactly.\n"
+		  "\n"
+		);
 		// [/CONSOLE:<ATTACH|CREATE|ATTACH-CREATE>]*  (* only as first parameter)
 		if (gbHasConsole)
 		{
@@ -629,14 +661,12 @@ int run(int argc, TCHAR *argv[], HINSTANCE hInstance, BOOL hasConsole)
 
 
 	// Find window
-	find_state_t findState = {0};
-	findState.suffix = windowSuffix;
-	EnumWindows(enumFuncFindSuffix, (LPARAM)&findState);
+	EnumWindows(enumFuncFindTitle, (LPARAM)&findState);
 	ghWndTracked = findState.hWndFound;
 
 	if (ghWndTracked == NULL)
 	{
-		TCHAR *msg = TEXT("ERROR: No windows found matching suffix.\n");
+		TCHAR *msg = TEXT("ERROR: No windows found matching title.\n");
 		if (gbHasConsole)
 		{
 			_ftprintf(stderr, msg);
@@ -696,90 +726,19 @@ int _tmain(int argc, TCHAR *argv[])
 	return run(argc - 1, argv + 1, hInstance, TRUE);
 }
 
-// TODO: Use CommandLineToArgvW() instead?
-int processArgs(TCHAR *args, TCHAR *argv[], int maxArgs) 
-{
-	int argc = 0;
-	argv[0] = NULL;
-	if (args != NULL) 
-	{
-		TCHAR *argStart = args;
-		bool inWhitespace = true;
-		bool inQuotes = false;
-		bool endToken = false;
-		TCHAR *d = args;
-		for (TCHAR *s = args; *s != 0; s++) 
-		{
-			TCHAR c = (TCHAR)(*s);
-			if (inWhitespace && c == '\"') 
-			{
-				inWhitespace = false;
-				inQuotes = true;
-				argStart = s + 1;
-				d = argStart - 1;
-			}
-			else if (inWhitespace && c != ' ' && c != '\t') 
-			{
-				inWhitespace = false;
-				argStart = s;
-				d = argStart;
-			}
-			if (!inWhitespace) 
-			{
-				if (inQuotes && c == '\"' && (*(s+1) == '\0' || *(s+1) == ' ' || *(s+1) == '\t')) 
-				{
-					inQuotes = false;
-					endToken = true;
-				} 
-				else if (inQuotes && c == '\"' && *(s+1) == '\"') 
-				{
-					*d++ = '\"';
-					s++;
-				} 
-				else if (!inQuotes && (c == ' ' || c == '\t')) 
-				{
-					endToken = true;
-				} 
-				else 
-				{
-					*d++ = c;
-				}
-				if (*(s+1) == '\0') 
-				{
-					endToken = true;
-				}
-				if (endToken) 
-				{
-					*d = '\0';
-					if (argc < maxArgs - 1) 
-					{
-						argv[argc] = argStart;
-						argc++;
-						argv[argc] = NULL;
-					}
-					endToken = false;
-					inWhitespace = true;
-					argStart = s + 1; 
-					d = argStart;
-				}
-			}
-		}
-	}
-	return argc;
-}
-
 // Entry point when compiled with Windows subsystem
 int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
 	gbSubsystemWindows = TRUE;
-	
-	TCHAR *argv[256];
-	int argc = processArgs(lpCmdLine, argv, sizeof(argv) / sizeof(argv[0]));
+
+	int argc = 0;
+	LPWSTR *argv = CommandLineToArgvW(lpCmdLine, &argc);
+
+	int argOffset = 0;
 
 	BOOL bConsoleAttach = FALSE;
 	BOOL bConsoleCreate = FALSE;
 	BOOL hasConsole = FALSE;
-	int argOffset = 0;
 	for (; argc > 0; argc--, argOffset++)
 	{
 		if (_tcsicmp(argv[argOffset], TEXT("/CONSOLE:ATTACH")) == 0)

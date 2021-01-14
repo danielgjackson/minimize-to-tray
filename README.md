@@ -9,13 +9,17 @@ This is designed to be scriptable -- if you want something more interactive/poin
 Usage:
 
 ```bat
-minimize-to-tray [/NOMIN] "Suffix"
+minimize-to-tray [/NOMIN|/MIN] "title"
 ```
 
 Where:
 
-* `"Suffix"` - a window title suffix to find.
-* `/NOMIN` - does not immediately minimize the window (will wait for you to manually minimize it).
+* `"title"` - a window title to find by exact match (you should place the title in quotes if it has spaces or other special characters).  
+  * To search for any matching text within the title, place an asterisk either side (e.g. `"*watch*"` matches `"C:\WINDOWS\system32\cmd.exe - wsl watch ps"`).
+  * To search for a matching suffix, place an asterisk before the title (e.g. `"*Notepad"` matches `"Untitled - Notepad"`).  
+  * To search for a matching prefix, place an asterisk after the title (e.g. `"Signal*"` matches `"Signal (1)"`).  
+* `/NOMIN` - does not immediately hide the window (waits until you to manually minimize it).
+* `/MIN` - immediately hides the window (default).
 
 Effect:
 
