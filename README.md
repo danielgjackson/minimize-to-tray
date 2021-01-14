@@ -9,17 +9,19 @@ This is designed to be scriptable -- if you want something more interactive/poin
 Usage:
 
 ```bat
-minimize-to-tray [/NOMIN|/MIN] "title"
+minimize-to-tray [/MIN|/NOMIN] [/NOTIFY|/NONOTIFY] "title"|"*suffix"|"prefix*"|"*substring*"
 ```
 
 Where:
 
-* `"title"` - a window title to find by exact match (you should place the title in quotes if it has spaces or other special characters).  
-  * To search for any matching text within the title, place an asterisk either side (e.g. `"*watch*"` matches `"C:\WINDOWS\system32\cmd.exe - wsl watch ps"`).
-  * To search for a matching suffix, place an asterisk before the title (e.g. `"*Notepad"` matches `"Untitled - Notepad"`).  
-  * To search for a matching prefix, place an asterisk after the title (e.g. `"Signal*"` matches `"Signal (1)"`).  
-* `/NOMIN` - does not immediately hide the window (waits until you to manually minimize it).
 * `/MIN` - immediately hides the window (default).
+* `/NOMIN` - does not immediately hide the window (waits until you to manually minimize it).
+* `/NOTIFY` - alerts the user that the window has been minimized to the notification area.
+* `/NONOTIFY` - does not alert when minimized.
+* `"title"` - a window title to find by exact match (e.g. `"Calculator"` find a window with exactly that title).
+* `"*suffix"` - search for a matching suffix by placing an asterisk before the title (e.g. `"*Notepad"` matches `"Untitled - Notepad"`).  
+* `"prefix*"` - search for a matching prefix by placing an asterisk after the title (e.g. `"Signal*"` matches `"Signal (1)"`).  
+* `"*substring*"` - search for any matching part within the title by placing an asterisk either side (e.g. `"*watch*"` matches `"C:\WINDOWS\system32\cmd.exe - wsl watch ps"`).
 
 Effect:
 

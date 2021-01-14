@@ -642,9 +642,7 @@ int run(int argc, TCHAR *argv[], HINSTANCE hInstance, BOOL hasConsole)
 		TCHAR *msg = TEXT(
 		  "minimize-to-tray  Dan Jackson, 2020.\n"
 		  "\n"
-		  "Usage: [/NOMIN|/MIN] [/POLL] \"<window-title>\"\n"
-		  "\n"
-		  "<window-title> can begin and end with '*' to match as a substring; begin with '*' to match as a suffix; end with '*' to match as a prefix; or otherwise must match exactly.\n"
+		  "Usage: minimize-to-tray [/MIN|/NOMIN] [/NOTIFY|/NONOTIFY] [/POLL] \"title\"|\"*suffix\"|\"prefix*\"|\"*substring*\"\n"
 		  "\n"
 		);
 		// [/CONSOLE:<ATTACH|CREATE|ATTACH-CREATE>]*  (* only as first parameter)

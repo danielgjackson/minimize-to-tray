@@ -4,8 +4,8 @@ CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "minimize-to-tray.exe.manifest"
 MAINICON ICON "icon.ico"
 
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION             1,0,0,0
-PRODUCTVERSION          1,0,0,0
+FILEVERSION             1,0,1,0
+PRODUCTVERSION          1,0,1,0
 FILEFLAGSMASK           VS_FFI_FILEFLAGSMASK
 FILEFLAGS               0
 FILEOS                  VOS_NT
@@ -18,12 +18,12 @@ BEGIN
 		VALUE "Comments",         "Minimize a window to the taskbar notification area (system tray)"
 		VALUE "CompanyName",      "danielgjackson"
 		VALUE "FileDescription",  "Minimize to Tray"
-		VALUE "FileVersion",      "V1.0.0.0"
+		VALUE "FileVersion",      "V1.0.1.0"
 		VALUE "InternalName",     "minimize-to-tray"
 		VALUE "LegalCopyright",   "(C)2020 Daniel Jackson (MIT License)"
 		VALUE "OriginalFilename", "minimize-to-tray.exe"
 		VALUE "ProductName",      "Minimize to Tray"
-		VALUE "ProductVersion",	  "V1.0.0.0"
+		VALUE "ProductVersion",	  "V1.0.1.0"
         END
 	END
 	BLOCK "VarFileInfo"
