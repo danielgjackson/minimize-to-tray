@@ -732,8 +732,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	int argc = 0;
 	LPWSTR *argv = CommandLineToArgvW(GetCommandLine(), &argc);
 
-	int argOffset = 0;
-
 	BOOL bConsoleAttach = FALSE;
 	BOOL bConsoleCreate = FALSE;
 	BOOL hasConsole = FALSE;
