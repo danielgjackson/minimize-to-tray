@@ -730,14 +730,15 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	gbSubsystemWindows = TRUE;
 
 	int argc = 0;
-	LPWSTR *argv = CommandLineToArgvW(lpCmdLine, &argc);
+	LPWSTR *argv = CommandLineToArgvW(GetCommandLine(), &argc);
 
 	int argOffset = 0;
 
 	BOOL bConsoleAttach = FALSE;
 	BOOL bConsoleCreate = FALSE;
 	BOOL hasConsole = FALSE;
-	for (; argc > 0; argc--, argOffset++)
+	int argOffset = 1;
+	for (; argc > argOffset; argOffset++)
 	{
 		if (_tcsicmp(argv[argOffset], TEXT("/CONSOLE:ATTACH")) == 0)
 		{
@@ -768,5 +769,5 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 		hasConsole = RedirectIOToConsole(bConsoleAttach, bConsoleCreate);
 	}
 
-	return run(argc, argv + argOffset, hInstance, hasConsole);
+	return run(argc - argOffset, argv + argOffset, hInstance, hasConsole);
 }
