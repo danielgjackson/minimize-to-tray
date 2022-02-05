@@ -1,3 +1,4 @@
 @pushd %~dp0
-pandoc --metadata title="Minimize to tray" -s README.md -o docs/index.html
+pandoc --shift-heading-level-by=-1 -s README.md -o docs/index.html
+copy /y screenshot.png docs
 @popd
