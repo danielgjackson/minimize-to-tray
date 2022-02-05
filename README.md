@@ -1,18 +1,34 @@
+---
+title: Minimize to tray
+---
+
 # Minimize to tray
 
-This program minimizes a window to the taskbar notification area (also informally known as the *system tray*).
+This program minimizes an application to the Windows taskbar notification area (also informally known as the *system tray*).
 
 This might be useful for long-running programs that you are happy to leave in the background and forget about.
 
 This is designed to be scriptable -- if you want something more interactive/point-and-click, you might prefer: [RBTray](http://rbtray.sourceforge.net/).
 
-Download the utility from [Releases](https://github.com/danielgjackson/minimize-to-tray/releases/latest).
+
+## Download
+
+Download the utility from:
+
+  * [Releases](https://github.com/danielgjackson/minimize-to-tray/releases/latest).
+
+The source code is available at:
+
+  * [github.com/danielgjackson/minimize-to-tray](https://github.com/danielgjackson/minimize-to-tray)
+
+...and released under an open source [MIT License](https://github.com/danielgjackson/minimize-to-tray/blob/master/LICENSE.txt).
+
+
+## Usage
 
 Usage:
 
-```bat
-minimize-to-tray [/MIN|/NOMIN] [/NOTIFY|/NONOTIFY] "title"|"*suffix"|"prefix*"|"*substring*"
-```
+    minimize-to-tray [/MIN|/NOMIN] [/NOTIFY|/NONOTIFY] "title"|"*suffix"|"prefix*"|"*substring*"
 
 Where:
 
@@ -60,3 +76,7 @@ Effect:
 ```bat
 reg delete "HKCU\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\TrayNotify" /v PastIconsStream /f && taskkill /im explorer.exe /f && start "Restarting" /d "%systemroot%" /i /normal explorer.exe
 ```
+
+---
+
+  * [danielgjackson.github.io/minimize-to-tray](https://danielgjackson.github.io/minimize-to-tray)

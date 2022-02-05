@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Minimize to tray</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      word-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Minimize to tray</h1>
+</header>
+<h1 id="minimize-to-tray">Minimize to tray</h1>
+<p>This program minimizes an application to the Windows taskbar notification area (also informally known as the <em>system tray</em>).</p>
+<p>This might be useful for long-running programs that you are happy to leave in the background and forget about.</p>
+<p>This is designed to be scriptable – if you want something more interactive/point-and-click, you might prefer: <a href="http://rbtray.sourceforge.net/">RBTray</a>.</p>
+<h2 id="download">Download</h2>
+<p>Download the utility from:</p>
+<ul>
+<li><a href="https://github.com/danielgjackson/minimize-to-tray/releases/latest">Releases</a>.</li>
+</ul>
+<p>The source code is available at:</p>
+<ul>
+<li><a href="https://github.com/danielgjackson/minimize-to-tray">github.com/danielgjackson/minimize-to-tray</a></li>
+</ul>
+<p>…and released under an open source <a href="https://github.com/danielgjackson/minimize-to-tray/blob/master/LICENSE.txt">MIT License</a>.</p>
+<h2 id="usage">Usage</h2>
+<p>Usage:</p>
+<pre><code>minimize-to-tray [/MIN|/NOMIN] [/NOTIFY|/NONOTIFY] &quot;title&quot;|&quot;*suffix&quot;|&quot;prefix*&quot;|&quot;*substring*&quot;</code></pre>
+<p>Where:</p>
+<ul>
+<li><code>/MIN</code> - immediately hides the window (default).</li>
+<li><code>/NOMIN</code> - does not immediately hide the window (waits until you to manually minimize it).</li>
+<li><code>/NOTIFY</code> - alerts the user that the window has been minimized to the notification area.</li>
+<li><code>/NONOTIFY</code> - does not alert when minimized.</li>
+<li><code>"title"</code> - a window title to find by exact match (e.g. <code>"Calculator"</code> find a window with exactly that title).</li>
+<li><code>"*suffix"</code> - search for a matching suffix by placing an asterisk before the title (e.g. <code>"*Notepad"</code> matches <code>"Untitled - Notepad"</code>).<br />
+</li>
+<li><code>"prefix*"</code> - search for a matching prefix by placing an asterisk after the title (e.g. <code>"Signal*"</code> matches <code>"Signal (1)"</code>).<br />
+</li>
+<li><code>"*substring*"</code> - search for any matching part within the title by placing an asterisk either side (e.g. <code>"*watch*"</code> matches <code>"C:\WINDOWS\system32\cmd.exe - wsl watch ps"</code>).</li>
+</ul>
+<p>Effect:</p>
+<ul>
+<li>The window that has a title matching the given suffix will appear to be minimized as an icon in the taskbar notification area (system tray).</li>
+<li>The notification icon and tooltip should match the window’s icon and title.</li>
+<li>Left-clicking on the notification icon restores the window.</li>
+<li>When you minimize the window yourself, it will disappear back to the taskbar notification area.</li>
+<li>Right-clicking on the notification icon shows a menu:
+<ul>
+<li><em>Restore</em> - restores the minimized window. When you minimize it again, it will return to the notification area.</li>
+<li><em>Close</em> - sends the window a close signal (it restores it first in case it needs to show UI).</li>
+<li><em>Stop Hiding</em> - takes the window out of the notification area (it will now be minimized normally) and does not track any future minimizes. This closes this utility for that window.</li>
+</ul></li>
+</ul>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<ul>
+<li><p>Some windows (e.g. <em>modern</em> UWP apps from Windows Store) don’t properly give their icon through the standard API, so a default one from the app is used.</p></li>
+<li><p>If using a terminal, your current command could be used as the window’s title, so it could match the window being found – just place a space after the command, or put the title in quotes to prevent this.</p></li>
+<li><p>The window must exist before running the utility, so you may need delay during any automated scripts. If using a batch file, you could try something like: <code>CHOICE /C 0 /D 0 /T 5 &gt;NUL</code></p></li>
+<li><p>You should not need to, but if you have any issues where your application does not automatically go back to the tray when it is later minimized, you can force a hacky <em>polling mode</em> with the option <code>/POLL</code>.</p></li>
+<li><p>If there are any old instances of this tool running, you can clean them up by running the following (do not use the ‘force’ mode as any tracked application windows will stay hidden!): <code>taskkill /im minimize-to-tray.exe</code></p></li>
+<li><p>Additional output for debugging can be seen with these options (which must be the first option given):</p>
+<ul>
+<li><code>/CONSOLE:ATTACH</code> - attach stdio to the parent console</li>
+<li><code>/CONSOLE:CREATE</code> - create a console (if ‘attach’ also specified, then only if that fails)</li>
+<li><code>/CONSOLE:ATTACH-CREATE</code> - attach stdio to the parent console but, if that fails, create a console</li>
+</ul></li>
+<li><p>If the history of the taskbar notification area (<em>Taskbar settings</em> / <em>Select which icons appear on the taskbar</em>) becomes too polluted with old entries, you can manually clear the cache with the following command (WARNING: this restarts Windows Explorer so you may lose some Explorer windows):</p></li>
+</ul>
+<pre class="bat"><code>reg delete &quot;HKCU\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\TrayNotify&quot; /v PastIconsStream /f &amp;&amp; taskkill /im explorer.exe /f &amp;&amp; start &quot;Restarting&quot; /d &quot;%systemroot%&quot; /i /normal explorer.exe</code></pre>
+<hr />
+<ul>
+<li><a href="https://danielgjackson.github.io/minimize-to-tray">danielgjackson.github.io/minimize-to-tray</a></li>
+</ul>
+</body>
+</html>
