@@ -2,6 +2,7 @@
 // Dan Jackson, 2020.
 
 #define _WIN32_WINNT 0x0600
+#define _CRT_SECURE_NO_WARNINGS // TODO: Use secure versions
 #include <windows.h>
 
 #include <stdlib.h>
@@ -9,6 +10,7 @@
 #include <signal.h>
 #include <stdbool.h>
 #include <time.h>
+#include <io.h>
 
 #include <tchar.h>
 #include <rpc.h>
@@ -354,7 +356,7 @@ void CreateGuid(GUID *guid)
 	}
 	else
 	{
-		seed = time(NULL);
+		seed = (unsigned int)time(NULL);
 	}
 	srand(seed);
 	guid->Data1 = (unsigned long)(intptr_t)ghWndTracked;	// Long
