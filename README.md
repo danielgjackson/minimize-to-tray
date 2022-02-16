@@ -55,7 +55,7 @@ Effect:
 
 * If using a terminal, your current command could be used as the window's title, so it could match the window being found -- just place a space after the command, or put the title in quotes to prevent this.
 
-* The window must exist before running the utility, so you may need delay during any automated scripts. If using a batch file, you could try something like: `CHOICE /C 0 /D 0 /T 5 >NUL`
+* The window must exist before running the utility, so you may need delay during any automated scripts. If using a batch file, you could try something like: `TIMEOUT 5` -- or, if you have an older version of Windows: `CHOICE /C 0 /D 0 /T 5 >NUL`
 
 * You should not need to, but if you have any issues where your application does not automatically go back to the tray when it is later minimized, you can force a hacky *polling mode* with the option `/POLL`.
 
