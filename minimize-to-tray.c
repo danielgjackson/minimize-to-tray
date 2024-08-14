@@ -1,5 +1,5 @@
 // Minimize a window to the taskbar notification area (system tray)
-// Dan Jackson, 2020.
+// Dan Jackson, 2020-2024.
 
 #define _WIN32_WINNT 0x0600
 #define _CRT_SECURE_NO_WARNINGS // TODO: Use secure versions
@@ -56,6 +56,7 @@ BOOL gbSubsystemWindows = FALSE;
 BOOL gbHasConsole = FALSE;
 BOOL gbStartMinimized = TRUE;
 BOOL gbForcePoll = FALSE;
+BOOL gbWasMaximized = FALSE;
 
 // Redirect standard I/O to a console
 static BOOL RedirectIOToConsole(BOOL tryAttach, BOOL createIfRequired)
@@ -75,7 +76,7 @@ static BOOL RedirectIOToConsole(BOOL tryAttach, BOOL createIfRequired)
 	{
 		freopen("CONIN$", "r", stdin);
 		freopen("CONOUT$", "w", stdout);
-		freopen("CONOUT$", "w", stderr);
+		freopen("CONERR$", "w", stderr);
 	}
 	return hasConsole;
 }
@@ -154,6 +155,7 @@ NOTIFYICONDATA nid = {0};
 		_tcscpy(nid.szInfoTitle, TEXT("Minimize To Tray"));
 		_tcscpy(nid.szInfo, TEXT("The application is being minimized to the Notification Area."));
 		nid.dwInfoFlags = NIIF_INFO | NIIF_NOSOUND;
+		nid.uTimeout = 2000;		// System default minimum is 10 seconds
 	}
 #ifdef USE_GUID
 	nid.uFlags |= NIF_GUID;
@@ -209,6 +211,29 @@ void ManageMinimize(void)
 	if (IsWindow(ghWndTracked))
 	{
 		_tprintf(TEXT("COMMAND: Minimize...\n"));
+
+#if 0
+		gbWasMaximized = FALSE;
+		WINDOWPLACEMENT windowPlacement = {0};
+		windowPlacement.length = sizeof(WINDOWPLACEMENT);
+		BOOL bWindowPlacement = GetWindowPlacement(ghWndTracked, &windowPlacement);
+		if (bWindowPlacement)
+		{
+			gbWasMaximized = windowPlacement.showCmd == SW_SHOWMAXIMIZED; // SW_SHOWMINIMIZED SW_SHOWNORMAL
+		}
+#else
+		gbWasMaximized = IsZoomed(ghWndTracked);
+#endif
+
+		if (gbWasMaximized)
+		{
+			_tprintf(TEXT("COMMAND: (was maximized)\n"));
+		}
+		else
+		{
+			_tprintf(TEXT("COMMAND: (was normal)\n"));
+		}
+
 		// Minimize
 		ShowWindow(ghWndTracked, SW_MINIMIZE);	// SW_FORCEMINIMIZE
 		// Hide
@@ -223,6 +248,7 @@ void ManageRestore(bool managerTerminating)
 	if (IsWindow(ghWndTracked))
 	{
 		_tprintf(TEXT("COMMAND: Restore...\n"));
+
 		// Un-hide
 		ShowWindow(ghWndTracked, SW_SHOW);
 
@@ -232,7 +258,31 @@ void ManageRestore(bool managerTerminating)
 			if (IsIconic(ghWndTracked))
 			{
 				// Restore
-				ShowWindow(ghWndTracked, SW_SHOWNORMAL);
+				if (gbWasMaximized)
+				{
+					_tprintf(TEXT("COMMAND: (was maximized)\n"));
+					ShowWindow(ghWndTracked, SW_RESTORE);
+					ShowWindow(ghWndTracked, SW_SHOWMAXIMIZED);
+				}
+				else
+				{
+					_tprintf(TEXT("COMMAND: (was normal)\n"));
+					ShowWindow(ghWndTracked, SW_RESTORE);
+				}
+
+#if 0
+				_tprintf(TEXT("COMMAND: (updating with same placement to try to force reflow in some windows)\n"));
+				gbWasMaximized = FALSE;
+				WINDOWPLACEMENT windowPlacement = {0};
+				windowPlacement.length = sizeof(WINDOWPLACEMENT);
+				BOOL bWindowPlacement = GetWindowPlacement(ghWndTracked, &windowPlacement);
+				if (bWindowPlacement)
+				{
+					SetWindowPlacement(ghWndTracked, &windowPlacement);
+				}
+#endif
+
+
 			}
 			SetForegroundWindow(ghWndTracked);
 		}
